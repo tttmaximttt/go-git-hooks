@@ -28,7 +28,7 @@ func readMsg(file string) []byte {
   return msg
 }
 
-func prepareMessage(rawBranch string, args []string) string {
+func prepareMessage(rawBranch string) string {
   var branchName string
   commitMsgFile := os.Args[1]
   msg := readMsg(commitMsgFile)
@@ -36,6 +36,7 @@ func prepareMessage(rawBranch string, args []string) string {
   switch rawBranch {
   case "master":
     branchName = ""
+    break
   default:
     arr := strings.Split(rawBranch, "/")
 
@@ -58,9 +59,9 @@ func main() {
     log.Fatal(err)
   }
 
-  outputResult := string(outBytes)
+  outputResult := strings.TrimSpace(string(outBytes))
 
-  msg := []byte(prepareMessage(outputResult, os.Args))
+  msg := []byte(prepareMessage(outputResult))
   writeMsg(os.Args[1], msg)
 }
 
