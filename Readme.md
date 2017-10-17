@@ -1,4 +1,4 @@
 # Golang git hooks
 
-##Usage
+## Usage
 - go build {`hookName`}.go && cp {`compiledHookName`} {`path/to/you/hooks/dir`}
