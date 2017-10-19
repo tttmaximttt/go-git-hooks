@@ -10,6 +10,18 @@ import (
   "io/ioutil"
 )
 
+func extractDescription (rawBranchName string) string {
+  arr := strings.Split(rawBranchName, "-")
+
+  if len(arr) < 2 {
+    return rawBranchName
+  }
+
+  slice := arr[0:2]
+  branch := strings.Join(slice, "-")
+  return branch
+}
+
 func check(e error) {
   if e != nil {
     panic(e)
@@ -38,13 +50,12 @@ func prepareMessage(rawBranch string) string {
     branchName = ""
     break
   default:
-    arr := strings.Split(rawBranch, "/")
+    arr := strings.Split(rawBranch, "/") // feature/HS-
 
     if len(arr) < 2 {
       log.Fatal(errors.New("Not support branches without type "))
     }
 
-    // branchType := arr[0]
     branchName = arr[1]
   }
 
@@ -52,14 +63,14 @@ func prepareMessage(rawBranch string) string {
 }
 
 func main() {
-  cmd := exec.Command("git", "symbolic-ref", "--short", "HEAD")
+  cmd := exec.Command("git", "symbolic-ref", "--short", "HEAD") // exec branch command
   outBytes, err := cmd.Output()
 
   if err != nil {
     log.Fatal(err)
   }
 
-  outputResult := strings.TrimSpace(string(outBytes))
+  outputResult := extractDescription(strings.TrimSpace(string(outBytes)))
 
   msg := []byte(prepareMessage(outputResult))
   writeMsg(os.Args[1], msg)
